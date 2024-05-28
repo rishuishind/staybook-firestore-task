@@ -29,6 +29,13 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
+## Update input should behave like this
+
+when the user clickes on the input save, cancel button should appear and if after typyin or removing any charecter from the input user clickes on cancel button then the last data that is available in the datbase should get reverted and if the user clickes on save the field will get updated without page reload and the input value should be the latest value if the user by any chance reloades the page
+[Click here to view the animation in full resolution](https://github.com/Mohit-au50/staybook-firestore-task/blob/main/updateField.gif)
+
+![Animation](https://github.com/Mohit-au50/staybook-firestore-task/blob/main/updateField.gif)
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
