@@ -21,6 +21,10 @@ export default function AddNewHotelPage() {
   const [imageTitles, setImageTitles] = useState<string>("");
 
   const handleMultipleImages = () => {
+    if (imageUrls === "" || imageTitles === "") {
+      alert("Please fill the image URL and Title");
+      return;
+    }
     const id = uuidv4();
     setImagesObj((prev) => [
       ...prev,
@@ -160,6 +164,13 @@ export default function AddNewHotelPage() {
       </form>
       <div className="grid grid-cols-3 py-4 gap-x-5">
         {imagesObj.map((obj, idx) => {
+          const isValidUrl =
+            obj.imageUrl.startsWith("http://") ||
+            obj.imageUrl.startsWith("https://");
+          if (!isValidUrl) {
+            alert("Please enter a valid URL");
+            return;
+          }
           return (
             <div key={idx} className="grid grid-rows-2 gap-y-3 h-[60%] ">
               <Image
