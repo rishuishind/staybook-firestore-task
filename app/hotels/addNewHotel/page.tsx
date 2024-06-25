@@ -1,32 +1,187 @@
+"use client";
 // import { HotelDetails } from "@/lib/classes/hotelDetails";
 // import { useState } from "react";
+import { db } from "@/lib/firebase/firebaseConfig";
+import { doc, setDoc, writeBatch } from "firebase/firestore";
+import dashify from "dashify";
+import { checkEmpty } from "@/lib/checkEmpty";
+import { useState } from "react";
+import Image from "next/image";
+import { addHotels } from "@/lib/firebase/addHotel";
 
 /*
     import addHotelDetailsInFirebaseCollection function here and pass hotelDetails Object
     pass collection name and hotelData from here to the function
 */
+interface ImageDetails {
+  imageUrl: string;
+  imageTitle: string;
+}
+
 export default function AddNewHotelPage() {
-  // const [formData, setFormData] = useState<HotelDetails>({});
-  // you can use dashify npm package to create a hotelSlug after hotelName and hotelCity is filled
-  // https://www.npmjs.com/package/dashify
+  const [imagesObj, setImagesObj] = useState<ImageDetails[]>([]);
+  const [imageUrls, setImageUrls] = useState<string>("");
+  const [imageTitles, setImageTitles] = useState<string>("");
 
-  // handle basic data validation like number value gets added as number only not in string, email validation etc
-  // use can use zod validations if you wish to
+  const handleMultipleImages = () => {
+    setImagesObj((prev) => [
+      ...prev,
+      { imageUrl: imageUrls, imageTitle: imageTitles },
+    ]);
+    setImageUrls("");
+    setImageTitles("");
+    console.log(imagesObj, "imagesObj");
+  };
 
-  // handle form submittion logic
-  //   const handleSubmit = async () => {
-  //     if form data is valid then call the function and add the data in firebase
-  //     const res = await addHotelDetailsInFirebaseCollection(
-  //       "collectionName",
-  //       formData
-  //     );
-  //     hanlde redirection logic here redirect the user ot /hotels page after data is successfully added to the database
-  //     if (res.status === "OK") {
-  //     }
-  //   };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    //Checking For empty Fields
+    const check = checkEmpty(e);
+    if (check.status === false) {
+      alert("Please fill all the fields");
+      return;
+    }
+    console.log(imagesObj, "imagesObj1");
+    const result = await addHotels(e, imagesObj);
+    if (result.status === true) {
+      alert("Hotel Added Successfully");
+    } else {
+      alert("Error Adding Hotel");
+    }
+  };
+
+  const handleDeleteImage = (idx: number) => {
+    const images = imagesObj;
+    images.splice(idx, 1);
+    setImagesObj([...images]);
+  };
 
   return (
     // add components to utilize them and reuse them insted of using a input field again and again
-    <div>AddNewHotelPage add inputs etc to add the hotel to the firebase</div>
+    <div className="container mx-auto py-8">
+      <form
+        onSubmit={handleSubmit}
+        className="p-5 space-y-5 bg-orange-500 rounded-md"
+      >
+        <div className="grid grid-cols-2 gap-x-4 flex-wrap gap-y-8">
+          <input
+            className="border p-2 rounded-md"
+            type="text"
+            name="hotelname"
+            placeholder="hotel name"
+          />
+          <input
+            className="border p-2 rounded-md"
+            type="email"
+            name="hotelemail"
+            placeholder="hotel email"
+          />
+          <input
+            type="tel"
+            className="border p-2 rounded-md"
+            name="hotelphone"
+            placeholder="Phone"
+          />
+          <div className="flex gap-x-2 items-center">
+            <label htmlFor="star rating" className="text-white">
+              Star Rating
+            </label>
+            <input
+              type="number"
+              className="border p-2 rounded-md"
+              name="hotelstarrating"
+              placeholder="Star Rating"
+              max={5}
+              min={0}
+            />
+          </div>
+          <input
+            type="text"
+            className="border p-2 rounded-md"
+            name="hotelimageurl"
+            placeholder="Image URL"
+          />
+          <input
+            type="text"
+            className="border p-2 rounded-md"
+            name="hoteladdress"
+            placeholder="Address"
+          />
+          <input
+            type="text"
+            className="border p-2 rounded-md"
+            name="hotelstate"
+            placeholder="State"
+          />
+          <input
+            type="text"
+            className="border p-2 rounded-md"
+            name="hotelcity"
+            placeholder="City"
+          />
+          <div>
+            <input
+              type="text"
+              className="border w-full p-2 rounded-md"
+              name="hotelpincode"
+              placeholder="Pincode"
+            />
+          </div>
+          <div className="flex flex-col-reverse gap-y-3">
+            <button
+              type="button"
+              onClick={handleMultipleImages}
+              className="px-4 py-2 bg-black rounded-md text-white"
+            >
+              Add Images
+            </button>
+            <input
+              type="text"
+              className="border p-2 rounded-md mt-2"
+              placeholder="Enter image URL"
+              value={imageUrls}
+              onChange={(e) => setImageUrls(e.target.value)}
+            />
+            <input
+              type="text"
+              className="border p-2 rounded-md mt-2"
+              placeholder="Enter image Title"
+              value={imageTitles}
+              onChange={(e) => setImageTitles(e.target.value)}
+            />
+          </div>
+        </div>
+        <button
+          className="bg-white text-black px-4 py-2 rounded-md"
+          type="submit"
+        >
+          Submit
+        </button>
+      </form>
+      <div className="grid grid-cols-3 py-4 gap-x-5">
+        {imagesObj.map((obj, idx) => {
+          return (
+            <div key={idx} className="grid grid-rows-2 gap-y-3 h-[60%] ">
+              <Image
+                src={obj.imageUrl}
+                alt={obj.imageTitle}
+                height={300}
+                width={300}
+                className="h-full"
+              />
+              <div>
+                <button
+                  onClick={() => handleDeleteImage(idx)}
+                  className="px-5 py-2 bg-red-500 text-white rounded-md"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }

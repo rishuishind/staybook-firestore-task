@@ -9,13 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dashify": "^2.0.0",
     "date-fns": "^3.6.0",
     "firebase": "^10.11.1",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-modal": "^3.16.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@types/dashify": "^1.0.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
