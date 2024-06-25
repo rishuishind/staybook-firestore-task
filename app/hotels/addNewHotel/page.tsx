@@ -1,19 +1,16 @@
 "use client";
-// import { HotelDetails } from "@/lib/classes/hotelDetails";
-// import { useState } from "react";
-import { db } from "@/lib/firebase/firebaseConfig";
-import { doc, setDoc, writeBatch } from "firebase/firestore";
-import dashify from "dashify";
 import { checkEmpty } from "@/lib/checkEmpty";
 import { useState } from "react";
 import Image from "next/image";
 import { addHotels } from "@/lib/firebase/addHotel";
+import { v4 as uuidv4 } from "uuid";
 
 /*
     import addHotelDetailsInFirebaseCollection function here and pass hotelDetails Object
     pass collection name and hotelData from here to the function
 */
 interface ImageDetails {
+  id: string;
   imageUrl: string;
   imageTitle: string;
 }
@@ -24,9 +21,10 @@ export default function AddNewHotelPage() {
   const [imageTitles, setImageTitles] = useState<string>("");
 
   const handleMultipleImages = () => {
+    const id = uuidv4();
     setImagesObj((prev) => [
       ...prev,
-      { imageUrl: imageUrls, imageTitle: imageTitles },
+      { id, imageUrl: imageUrls, imageTitle: imageTitles },
     ]);
     setImageUrls("");
     setImageTitles("");
@@ -42,12 +40,13 @@ export default function AddNewHotelPage() {
       alert("Please fill all the fields");
       return;
     }
-    console.log(imagesObj, "imagesObj1");
     const result = await addHotels(e, imagesObj);
     if (result.status === true) {
       alert("Hotel Added Successfully");
+      setImagesObj([]);
     } else {
       alert("Error Adding Hotel");
+      setImagesObj([]);
     }
   };
 

@@ -86,7 +86,19 @@ export default function page() {
               key={index}
               className="border-2 border-black m-12 p-8 rounded-lg flex justify-between"
             >
-              <span>hotel details of {hotel.hotelName}</span>
+              <div>
+                <Image
+                  src={hotel.hotelImageUrl}
+                  alt="hotel image"
+                  width={200}
+                  height={200}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <span className="text-center text-2xl">
+                  hotel details of <span className="text-red-500">{hotel.hotelName}</span>
+                </span>
+              </div>
             </Link>
           ))}
         </InfiniteScroll>

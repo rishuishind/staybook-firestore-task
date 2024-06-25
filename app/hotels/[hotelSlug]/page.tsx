@@ -118,6 +118,12 @@ export default function Page({ params }: { params: { hotelSlug: string } }) {
         imageUrl: newImageUrl,
         imageTitle: newImageTitle,
       });
+      hotelData.hotelImagesList.forEach((image) => {
+        if (image.id === imageId) {
+          image.imageUrl = newImageUrl;
+          image.imageTitle = newImageTitle;
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -146,66 +152,85 @@ export default function Page({ params }: { params: { hotelSlug: string } }) {
       {hotelData?.hotelName ? (
         <div className="p-4 bg-slate-200 h-screen">
           <div className="grid grid-cols-2 gap-5">
-            <div className="gap-3 grid grid-cols-3">
-              {hotelData.hotelImagesList.map((image, index) => (
-                <div key={index} className="mb-4">
-                  <Image
-                    src={image.imageUrl}
-                    onClick={() => {
-                      openModal();
-                      setModalData(image);
-                    }}
-                    width={300}
-                    height={200}
-                    alt={`Hotel image ${index + 1}`}
-                    className="rounded cursor-pointer"
-                  />
-                </div>
-              ))}
-              <CustomModal isOpen={modalIsOpen} onClose={closeModal}>
-                <div className="flex justify-center items-center h-full">
-                  <div className="flex flex-col h-[50vh] rounded-md p-5 bg-slate-400 w-full">
-                    <form className="flex flex-col gap-y-5">
-                      <label htmlFor="url">Image URL:</label>
-                      <input
-                        type="text"
-                        value={modalData.imageUrl}
-                        className="py-2 px-2 rounded-md"
-                        onChange={(e) => {
-                          setModalData((prev) => {
-                            return { ...prev, imageUrl: e.target.value };
-                          });
-                        }}
-                      />
-                      <label htmlFor="text">Image Text:</label>
-                      <input
-                        type="text"
-                        value={modalData.imageTitle}
-                        className="py-2 px-2 rounded-md"
-                        onChange={(e) => {
-                          setModalData((prev) => {
-                            return { ...prev, imageTitle: e.target.value };
-                          });
-                        }}
-                      />
-                    </form>
-                    <div>
-                      <button
-                        onClick={() => {
-                          handleImageUpdate(
-                            modalData.id,
-                            modalData.imageUrl,
-                            modalData.imageTitle
-                          );
-                        }}
-                        className="px-4 py-2 rounded-md bg-white text-black mt-5"
-                      >
-                        Submit
-                      </button>
+            <div className="space-y-5">
+              <div className="flex justify-center">
+                <span className="text-4xl font-semibold">Gallery</span>
+              </div>
+              <div className="gap-3 grid grid-cols-3">
+                {hotelData.hotelImagesList.map((image, index) => (
+                  <div key={index} className="mb-4">
+                    <Image
+                      src={image.imageUrl}
+                      onClick={() => {
+                        openModal();
+                        setModalData(image);
+                      }}
+                      width={300}
+                      height={200}
+                      alt={`Hotel image ${index + 1}`}
+                      className="rounded cursor-pointer"
+                    />
+                  </div>
+                ))}
+                <CustomModal isOpen={modalIsOpen} onClose={closeModal}>
+                  <div className="flex justify-center items-center h-full">
+                    <div className="flex flex-col h-[50vh] rounded-md p-5  w-full">
+                      <form className="flex flex-col gap-y-5">
+                        <label htmlFor="url">Image URL:</label>
+                        <input
+                          type="text"
+                          value={modalData.imageUrl}
+                          className="py-2 px-2 rounded-md border border-slate-400"
+                          onChange={(e) => {
+                            setModalData((prev) => {
+                              return { ...prev, imageUrl: e.target.value };
+                            });
+                          }}
+                        />
+                        <label htmlFor="text">Image Text:</label>
+                        <input
+                          type="text"
+                          value={modalData.imageTitle}
+                          className="py-2 px-2 rounded-md border border-slate-400"
+                          onChange={(e) => {
+                            setModalData((prev) => {
+                              return { ...prev, imageTitle: e.target.value };
+                            });
+                          }}
+                        />
+                      </form>
+                      <div>
+                        <button
+                          onClick={() => {
+                            handleImageUpdate(
+                              modalData.id,
+                              modalData.imageUrl,
+                              modalData.imageTitle
+                            );
+                            closeModal();
+                          }}
+                          className="px-4 py-2 rounded-md bg-slate-500 text-white hover:bg-slate-600 mt-5"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                      <div>
+                        <div>
+                          <span className="">Preview:</span>
+                        </div>
+                        <div>
+                          <Image
+                            src={modalData.imageUrl}
+                            alt={modalData.imageTitle}
+                            height={300}
+                            width={300}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CustomModal>
+                </CustomModal>
+              </div>
             </div>
             <div>
               <div className="grid grid-cols-2 gap-4 h-[90vh] bg-white py-5 rounded-md px-7">
@@ -552,6 +577,51 @@ export default function Page({ params }: { params: { hotelSlug: string } }) {
                           setHotelData({
                             ...hotelData,
                             hotelPincode: previousState,
+                          });
+                          setPreviousState("");
+                        }}
+                        className="px-3 py-2 rounded-md bg-red-400 text-white"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="col-span-2">
+                  <label htmlFor="hotelImageUrl" className="px-1">
+                    Hotel Image URL:
+                  </label>
+                  <input
+                    type="text"
+                    value={hotelData?.hotelImageUrl || ""}
+                    onClick={() => {
+                      setPreviousState(hotelData?.hotelImageUrl);
+                      setUpdatingFor("hotelImageUrl");
+                    }}
+                    onChange={setData}
+                    name="hotelImageUrl"
+                    className="px-3 py-1 rounded-md border w-full"
+                  />
+                  {updatingFor === "hotelImageUrl" && (
+                    <div className="flex justify-end gap-x-4 mt-2">
+                      <button
+                        onClick={() => {
+                          handleInputClick(
+                            "hotelImageUrl",
+                            hotelData?.hotelImageUrl
+                          );
+                          setUpdatingFor("empty");
+                        }}
+                        className="px-3 py-2 rounded-md bg-yellow-400 text-white"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => {
+                          setUpdatingFor("empty");
+                          setHotelData({
+                            ...hotelData,
+                            hotelImageUrl: previousState,
                           });
                           setPreviousState("");
                         }}
