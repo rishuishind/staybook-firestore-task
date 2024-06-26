@@ -62,7 +62,7 @@ export default function AddNewHotelPage() {
 
   return (
     // add components to utilize them and reuse them insted of using a input field again and again
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto md:py-8">
       <form
         onSubmit={handleSubmit}
         className="p-5 space-y-5 bg-orange-500 rounded-md"
@@ -162,7 +162,7 @@ export default function AddNewHotelPage() {
           Submit
         </button>
       </form>
-      <div className="grid grid-cols-3 py-4 gap-x-5">
+      <div className="md:grid grid-cols-3 flex flex-col gap-y-2 container px-6 md:px-0 py-4 gap-x-5">
         {imagesObj.map((obj, idx) => {
           const isValidUrl =
             obj.imageUrl.startsWith("http://") ||
@@ -172,15 +172,17 @@ export default function AddNewHotelPage() {
             return;
           }
           return (
-            <div key={idx} className="grid grid-rows-2 gap-y-3 h-[60%] ">
-              <Image
-                src={obj.imageUrl}
-                alt={obj.imageTitle}
-                height={300}
-                width={300}
-                className="h-full"
-              />
-              <div>
+            <div key={idx} className=" flex flex-col gap-y-2">
+              <div className="">
+                <Image
+                  src={obj.imageUrl}
+                  alt={obj.imageTitle}
+                  height={300}
+                  width={300}
+                  className=""
+                />
+              </div>
+              <div className=" h-fit">
                 <button
                   onClick={() => handleDeleteImage(idx)}
                   className="px-5 py-2 bg-red-500 text-white rounded-md"

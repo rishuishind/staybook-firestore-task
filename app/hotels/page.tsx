@@ -84,7 +84,7 @@ export default function page() {
             <Link
               href={`/hotels/${hotel.hotelSlug}-${hotel.hotelCity}`}
               key={index}
-              className="border-2 border-black m-12 p-8 rounded-lg flex justify-between"
+              className="border-2 border-black hover:bg-slate-100 m-12 p-8 rounded-lg flex flex-col md:flex-row justify-between"
             >
               <div>
                 <Image

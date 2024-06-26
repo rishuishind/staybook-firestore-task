@@ -151,7 +151,7 @@ export default function Page({ params }: { params: { hotelSlug: string } }) {
     <>
       {hotelData?.hotelName ? (
         <div className="p-4 bg-slate-200 h-screen">
-          <div className="grid grid-cols-2 gap-5">
+          <div className="md:grid grid-cols-2 flex-col flex gap-5">
             <div className="space-y-5">
               <div className="flex justify-center">
                 <span className="text-4xl font-semibold">Gallery</span>
@@ -174,7 +174,7 @@ export default function Page({ params }: { params: { hotelSlug: string } }) {
                 ))}
                 <CustomModal isOpen={modalIsOpen} onClose={closeModal}>
                   <div className="flex justify-center items-center h-full">
-                    <div className="flex flex-col h-[50vh] rounded-md p-5  w-full">
+                    <div className="flex flex-col md:h-[50vh] rounded-md p-5  w-full">
                       <form className="flex flex-col gap-y-5">
                         <label htmlFor="url">Image URL:</label>
                         <input
@@ -233,7 +233,7 @@ export default function Page({ params }: { params: { hotelSlug: string } }) {
               </div>
             </div>
             <div>
-              <div className="grid grid-cols-2 gap-4 h-[90vh] bg-white py-5 rounded-md px-7">
+              <div className="grid grid-cols-2 gap-4 md:h-[90vh] bg-white py-5 rounded-md px-7">
                 <div className="col-span-2">
                   <label htmlFor="hotelName" className="px-1">
                     Hotel Name:
